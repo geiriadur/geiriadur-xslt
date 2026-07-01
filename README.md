@@ -14,20 +14,20 @@ gan / by Dr Talat Zafar Chaudhri
 
 #### Gweinydd / Server
 
-  python3
-  Flask
-  gunicorn
-  ProxyFix
+python3  
+Flask  
+gunicorn  
+ProxyFix  
 
-  subprocess
-  globals
-  lxml
-  urllib
-  os
-  sys
-  re
-  unicodedata
-  yaml
+subprocess  
+globals  
+lxml  
+urllib  
+os  
+sys  
+re  
+unicodedata  
+yaml  
 
 #### Rhaglen We / Web Application
 
