@@ -58,6 +58,13 @@ Group=www-data
 WantedBy=multi-user.target
 ```
 
+```
+sudo systemctl daemon-reload
+sudo systemctl enable geiriadur.service
+sudo systemctl start geiriadur.service
+sudo systemctl status geiriadur.service
+```
+
 ### nginx ###
 
 ```
