@@ -38,4 +38,3 @@ dim
 Mae'r rhaglen hon yn eiriadur sy'n storio data fel XML ac sy'n rhoi canlyniadau drwy XSLT.
 
 This program is a dictionary which stores data as XML and gives results via XSLT.
-This program enables searching the Welsh Periodicals and the 19th century Newspapers Online in the collections of the National Library of Wales by using regular expressions, and returns the results together (optionally in date order) in a single list.
