@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="geiriadur.css"?>
+<entry>
+    <meta>
+        <headword-ref>trawsryweddol</headword-ref>
+        <published>2026-06-25</published>
+    </meta>
+    <head>
+        <headword-form>trawsryweddol</headword-form>
+        <headword-form>trawsrhyweddol</headword-form>
+        <etymology>trawsrywedd, trawsrhywedd+-ol</etymology>
+        <part-of-speech>adjective</part-of-speech>
+    </head>
+    <body>
+        <sense>
+            <translation lang="en">transgender</translation>
+			<status>B</status>
+			<notes lang = "cy">Y ffurf gyntaf sy orau.</notes>
+			<notes lang = "en">The first form is best.</notes>
+        </sense>
+    </body>
+</entry>

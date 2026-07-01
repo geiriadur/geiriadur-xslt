@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="brythoneg.css"?>
+<entry>
+    <meta>
+        <headword-ref>penn</headword-ref>
+        <published>2026-07-01</published>
+    </meta>
+    <head>
+        <headword-form>pen</headword-form>
+        <transcription>pɛn:</transcription>
+        <etymology>Celtic *kwenno-</etymology>
+        <part-of-speech>noun</part-of-speech>
+        <gender>masculine</gender>
+        <number>singular</number>
+        <plural>
+            <plural-form>pennau</plural-form>
+            <transcription>pennaɨ</transcription>
+            <etymology>*kwenno-+-owes</etymology>
+        </plural>
+    </head>
+    <body>
+        <sense>
+            <translation lang="en">head, end</translation>
+        </sense>
+    </body>
+</entry>
