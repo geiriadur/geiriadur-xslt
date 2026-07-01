@@ -48,7 +48,8 @@ This program is a dictionary which stores data as XML and gives results via XSLT
 Description=Welsh Dictionary
 
 [Service]
-ExecStart=/srv/geiriadur.llafar.cymru/public/geiriadur.sh
+ExecStart=/srv/<web_root_here>/geiriadur.sh
+;ExecStart=/var/www/<web_root_here>/geiriadur.sh
 
 User=www-data
 Group=www-data
