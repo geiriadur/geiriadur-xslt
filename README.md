@@ -39,7 +39,7 @@ Mae'r rhaglen hon yn eiriadur sy'n storio data fel XML ac sy'n rhoi canlyniadau 
 
 This program is a dictionary which stores data as XML and gives results via XSLT.
 
-###systemd###
+### systemd ###
 
 /etc/systemd/system/geiriadur.service
 
@@ -57,7 +57,7 @@ Group=www-data
 WantedBy=multi-user.target
 ```
 
-###nginx###
+### nginx ###
 
 ```
 # Support Clean (aka Search Engine Friendly) URLs
