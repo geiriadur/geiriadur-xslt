@@ -38,3 +38,35 @@ yaml
 Mae'r rhaglen hon yn eiriadur sy'n storio data fel XML ac sy'n rhoi canlyniadau drwy XSLT.
 
 This program is a dictionary which stores data as XML and gives results via XSLT.
+
+###systemd###
+
+/etc/systemd/system/geiriadur.service
+
+```
+[Unit]
+Description=Welsh Dictionary
+
+[Service]
+ExecStart=/srv/geiriadur.llafar.cymru/public/geiriadur.sh
+
+User=www-data
+Group=www-data
+
+[Install]
+WantedBy=multi-user.target
+```
+
+###nginx###
+
+```
+# Support Clean (aka Search Engine Friendly) URLs
+location / {
+    try_files $uri $uri/ /index.php?$args;
+    proxy_pass http://127.0.0.1:5000;  # Flask backend on port 5000
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+```
