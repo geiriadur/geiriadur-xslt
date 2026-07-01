@@ -1,3 +1,7 @@
+from globals import *
+
+'''
+# MOVED TO globals.py
 # GLOBALS
 #
 # CONSTANTS
@@ -22,6 +26,7 @@ page_title = "Welsh Dictionary"
 page_lang = "en"
 
 index_lang = ""
+'''
 
 # CODE FOLLOWS
 

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/css" href="brythoneg.css"?>
+<double>
 <entry>
     <meta>
-        <headword-ref>penn</headword-ref>
+        <headword-ref>pen</headword-ref>
         <published>2026-07-01</published>
     </meta>
     <head>
@@ -14,8 +15,8 @@
         <number>singular</number>
         <plural>
             <plural-form>pennau</plural-form>
-            <transcription>pennaɨ</transcription>
-            <etymology>*kwenno-+-owes</etymology>
+            <transcription>pen:aɨ</transcription>
+            <etymology>*kwenno-+*-owes</etymology>
         </plural>
     </head>
     <body>
@@ -24,3 +25,28 @@
         </sense>
     </body>
 </entry>
+<entry>
+    <meta>
+        <headword-ref>llan</headword-ref>
+        <published>2026-07-01</published>
+    </meta>
+    <head>
+        <headword-form>llan</headword-form>
+        <transcription>ꞎan:</transcription>
+        <etymology>Celtic *landā-</etymology>
+        <part-of-speech>noun</part-of-speech>
+        <gender>feminine</gender>
+        <number>singular</number>
+        <plural>
+            <plural-form>llannau</plural-form>
+            <transcription>ꞎan:aɨ</transcription>
+            <etymology>*landā+*-owes</etymology>
+        </plural>
+    </head>
+    <body>
+        <sense>
+            <translation lang="en">churchyard, enclosure</translation>
+        </sense>
+    </body>
+</entry>
+</double>
