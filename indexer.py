@@ -3,7 +3,7 @@
 # Stopwords for translation
 stopwords = ["or", "and", "ones", "one"]
 # Text language
-text_lang = "cel-x-brit"
+text_lang = "cy"
 # Translation language
 translation_lang = "en"
 

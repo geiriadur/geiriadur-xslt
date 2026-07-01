@@ -18,7 +18,7 @@
                             <xsl:if test="string(.) != ''">
                                 <tr>
                                     <td>Headword: </td>
-                                    <td lang="cel-x-brit"><xsl:value-of select="."/></td>
+                                    <td lang="cy"><xsl:value-of select="."/></td>
                                 </tr>
                             </xsl:if>
                         </xsl:for-each>
@@ -26,7 +26,7 @@
                             <xsl:if test="string(.) != ''">
                                 <tr>
                                     <td>IPA: </td>
-                                    <td lang="cel-x-brit-ipa"><xsl:value-of select="."/></td>
+                                    <td lang="cy-ipa"><xsl:value-of select="."/></td>
                                 </tr>
                             </xsl:if>
                         </xsl:for-each>
@@ -88,7 +88,7 @@
                                 <xsl:if test="string(.) != ''">
                                     <tr>
                                         <td>Plural: </td>
-                                        <td lang="cel-x-brit"><xsl:value-of select="."/>
+                                        <td lang="cy"><xsl:value-of select="."/>
                                             <!-- Add (note) only if @note exists and is not empty -->
                                             <xsl:if test="@note">
                                                 <xsl:text> (</xsl:text>
@@ -103,7 +103,7 @@
                                 <xsl:if test="string(.) != ''">
                                     <tr>
                                         <td>IPA: </td>
-                                        <td lang="cel-x-brit-ipa"><xsl:value-of select="."/>
+                                        <td lang="cy-ipa"><xsl:value-of select="."/>
                                             <!-- Add (note) only if @note exists and is not empty -->
                                             <xsl:if test="@note">
                                                 <xsl:text> (</xsl:text>
