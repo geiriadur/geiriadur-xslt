@@ -62,15 +62,71 @@ for filename in os.listdir(folder):
                     word = word.strip()
                     if word:
                         # Avoid duplicate entries
-                        if not index_root.xpath(f'word[word-form="{word}" and file-ref="{os.path.splitext(filename)[0]}"]'):
-                        #if not index_root.xpath(f'word[word-form="{word}"]'):
+                        if not index_root.xpath(f'word[search-form="{word}" and file-ref="{os.path.splitext(filename)[0]}"]'):
+                        #if not index_root.xpath(f'word[search-form="{word}"]'):
+
+                            entry = elem.xpath('./ancestor::entry[1]')[0]
+                            headwords = [h.text.strip() for h in entry.findall('./head/headword-form')]
+                            #headword = entry.findtext('./head/headword-form', '')
+                            '''
                             w = ET.SubElement(index_root, "word")
-                            ET.SubElement(w, "word-form").text = word
+
+                            ET.SubElement(w, "word-form").text = headword
+                            ET.SubElement(w, "search-form").text = word
+
                             if tag == "translation":
-                                ET.SubElement(w, "lang").text = translation_lang
+                                ET.SubElement(w, "slang").text = translation_lang
                             else:
-                                ET.SubElement(w, "lang").text = text_lang
+                                ET.SubElement(w, "slang").text = text_lang
+
                             ET.SubElement(w, "file-ref").text = os.path.splitext(filename)[0]
+
+                            '''
+                            for headword in headwords:
+                                w = ET.SubElement(index_root, "word")
+
+                                ET.SubElement(w, "word-form").text = headword
+                                ET.SubElement(w, "search-form").text = word
+
+                                if tag == "translation":
+                                    ET.SubElement(w, "slang").text = translation_lang
+                                else:
+                                    ET.SubElement(w, "slang").text = text_lang
+
+                                ET.SubElement(w, "file-ref").text = os.path.splitext(filename)[0]
+                            
+                            #w = ET.SubElement(index_root, "word")
+                            '''
+                            if tag == "headword-form":
+                                headword = elem.text.strip()
+                            else:
+                                entry = elem.xpath('./ancestor::entry[1]')[0]
+                                headword = entry.findtext('./head/headword-form', '')
+
+                            ET.SubElement(w, "word-form").text = headword
+                            '''
+                            #entry = elem.xpath('./ancestor::entry[1]')[0]
+
+                            #if tag == "headword-form":
+                            #    headwords = [h.text.strip() for h in entry.findall('./head/headword-form')]
+                            #else:
+                            #    headwords = [entry.findtext('./head/headword-form', '')]
+
+                            #for headword in headwords:
+                            #    ET.SubElement(w, "word-form").text = headword
+
+                            #ET.SubElement(w, "search-form").text = word
+
+                            #if tag == "translation":
+                            #    ET.SubElement(w, "slang").text = translation_lang
+                            #else:
+                            #    ET.SubElement(w, "slang").text = text_lang
+                            #print(headword+":"+word+":"+ os.path.splitext(filename)[0])
+
+                            #file_ref = os.path.splitext(filename)[0]
+                            #print(headword + " : " + word + ":" + file_ref)
+                            #ET.SubElement(w, "file-ref").text = file_ref
+                            #ET.SubElement(w, "file-ref").text = os.path.splitext(filename)[0]
 
     except ET.XMLSyntaxError:
         print(f"Skipping malformed XML: {filename}")

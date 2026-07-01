@@ -13,7 +13,7 @@
                         <th>Field</th>
                         <th>Content</th>
                     </tr-->
-                    <xsl:for-each select="entry/head">
+                    <xsl:for-each select="//entry/head">
                         <xsl:for-each select="headword-form">
                             <xsl:if test="string(.) != ''">
                                 <tr>
@@ -22,20 +22,12 @@
                                 </tr>
                             </xsl:if>
                         </xsl:for-each>
-                        <xsl:for-each select="transcription">
-                            <xsl:if test="string(.) != ''">
-                                <tr>
-                                    <td>IPA: </td>
-                                    <td lang="cy-ipa"><xsl:value-of select="."/></td>
-                                </tr>
-                            </xsl:if>
-                        </xsl:for-each>
                         <xsl:for-each select="etymology">
                             <xsl:if test="string(.) != ''">
                                 <tr>
                                     <!--td>Etymology: </td-->
                                     <!-- May be one or more of multiple languages /-->
-                                    <!--td lang="cel-x-proto"><xsl:value-of select="."/></td-->
+                                    <!--td lang="cy"><xsl:value-of select="."/></td-->
                                     <xsl:choose>
                                         <xsl:when test="not(@lang) or @lang=''">
                                             <td>Etymology: </td>
@@ -99,27 +91,12 @@
                                     </tr>
                                 </xsl:if>
                             </xsl:for-each>
-                            <xsl:for-each select="transcription">
-                                <xsl:if test="string(.) != ''">
-                                    <tr>
-                                        <td>IPA: </td>
-                                        <td lang="cy-ipa"><xsl:value-of select="."/>
-                                            <!-- Add (note) only if @note exists and is not empty -->
-                                            <xsl:if test="@note">
-                                                <xsl:text> (</xsl:text>
-                                                <xsl:value-of select="@note"/>
-                                                <xsl:text>)</xsl:text>
-                                            </xsl:if>
-                                        </td>
-                                    </tr>
-                                </xsl:if>
-                            </xsl:for-each>
                             <xsl:for-each select="etymology">
                                 <xsl:if test="string(.) != ''">
                                     <tr>
                                         <td>Etymology: </td>
                                         <!-- May be one or more of multiple languages /-->
-                                        <!--td lang="cel-x-proto"><xsl:value-of select="."/></td-->
+                                        <!--td lang="cy"><xsl:value-of select="."/></td-->
                                         <td><xsl:value-of select="."/>
                                             <!-- Add (note) only if @note exists and is not empty -->
                                             <xsl:if test="@note">
@@ -133,7 +110,7 @@
                             </xsl:for-each>
                         </xsl:for-each>
                     </xsl:for-each>
-                    <xsl:for-each select="entry/body/sense">
+                    <xsl:for-each select="//entry/body/sense">
                         <tr><td></td><td></td></tr>
                         <xsl:for-each select="translation">
                             <xsl:if test="string(.) != ''">
@@ -151,8 +128,16 @@
                                 </tr>
                             </xsl:if>
                         </xsl:for-each>
+                        <xsl:for-each select="status">
+                            <xsl:if test="string(.) != ''">
+                                <tr>
+                                    <td>Status: </td>
+                                    <td><xsl:value-of select="."/></td>
+                                </tr>
+                            </xsl:if>
+                        </xsl:for-each>
                     </xsl:for-each>
-                    <xsl:for-each select="entry/body/sense">
+                    <xsl:for-each select="//entry/body/sense">
                         <tr><td></td><td></td></tr>
                         <xsl:for-each select="notes">
                             <xsl:if test="string(.) != ''">

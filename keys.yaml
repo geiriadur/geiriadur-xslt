@@ -1,0 +1,60 @@
+# Note that the space after the colon is important in YAML
+word_index: word_index.xml
+dir: xml
+default_page_lang: cy
+
+cy:
+  # Constants
+  not_found: Ni chafwyd yn y geiriadur. Chwiliwch eto.
+  no_data: Dim data neu gofnod ar ffurf wael. Cysylltwch â'ch geiriadurwr.
+  xslt_error: Gwall yn prosesu XML/XSLT
+  lang_results_msg: Canlyniadau ar gyfer chwiliad {results_lang_name}
+  search_lang: en
+  search_lang_name: Saesneg
+  data_lang: cy
+  data_lang_name: Cymraeg
+  search_button_name: Chwilio
+  page_title: Welsh Dictionary
+
+  tkeys:
+    # Translation keys
+    adjective: ansoddair
+    feminine: benywaidd
+    finite-verb: berf gyfyngedig
+    masculine: gwrywaidd
+    noun: enw
+    plural: lluosog
+    pronoun: rhagenw
+    singular: unigol
+    verb-noun: berfenw
+
+    imperfective: amherffeithiol
+    indicative: mynegol
+    present: presennol
+
+    'Headword:': 'Dangosair:'
+    'Etymology:': 'Tarddiad:'
+    'Part of Speech:': 'Rhan Ymadrodd:'
+    'Person:': 'Person:'
+    'Gender:': 'Cenedl:'
+    'Number:': 'Rhif:'
+    'Plural:': 'Lluosog:'
+    'Sense:': 'Saesneg:'
+    'Status:': 'Statws:'
+    'Notes:': 'Nodiadau:'
+
+en:
+  # Constants
+  not_found: Not found in dictionary. Please search again.
+  no_data: No data or malformed entry. Please consult your lexicographer.
+  xslt_error: Error processing XML/XSLT
+  lang_results_msg: Results for {results_lang_name} search
+  search_lang: en
+  search_lang_name: English
+  data_lang: cy
+  data_lang_name: Welsh
+  search_button_name: Search
+  page_title: Welsh Dictionary
+
+  tkeys:
+    'Sense:': 'English:'
