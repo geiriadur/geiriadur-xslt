@@ -1,7 +1,8 @@
 # Note that the space after the colon is important in YAML
 word_index: word_index.xml
 dir: xml
-default_page_lang: cy
+default_page_lang: en
+random_word_on: True
 
 cy:
   # Constants
@@ -15,6 +16,11 @@ cy:
   data_lang_name: Cymraeg
   search_button_name: Chwilio
   page_title: Welsh Dictionary
+
+  # Won't normally work in the data language
+  # unless the code is modified because
+  # it only works in the <translation> field
+  #stopwords: ["", "", "", ""]
 
   tkeys:
     # Translation keys
@@ -55,6 +61,9 @@ en:
   data_lang_name: Welsh
   search_button_name: Search
   page_title: Welsh Dictionary
+
+  # For the <translation> field
+  stopwords: ["or", "and", "ones", "one"]
 
   tkeys:
     'Sense:': 'English:'

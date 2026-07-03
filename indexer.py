@@ -1,14 +1,24 @@
+from globals import *
+from functions import get_keys
+
 # CONSTANTS
 
 # Stopwords for translation
-stopwords = ["or", "and", "ones", "one"]
-# Text language
-text_lang = "cy"
-# Translation language
-translation_lang = "en"
+#stopwords = ["or", "and", "ones", "one"]
 
-folder = "xml"  # folder with XML files
-index_file = "word_index.xml"
+# Gets values required for indexer
+get_keys()
+# Have to do this again to get the results
+from functions import *
+
+# Moved to globals.py and yaml via functions.py
+# Data language
+#data_lang = "cy"
+# Search language
+#search_lang = "en"
+
+#dir = "xml"  # folder with XML files
+#word_index = "word_index.xml"
 
 # CODE FOLLOWS
 
@@ -17,19 +27,19 @@ import re
 from lxml import etree as ET
 
 # Load or create the index
-if os.path.isfile(index_file):
-    index_tree = ET.parse(index_file)
+if os.path.isfile(word_index):
+    index_tree = ET.parse(word_index)
     index_root = index_tree.getroot()
 else:
     index_root = ET.Element("index")
     index_tree = ET.ElementTree(index_root)
 
 # Iterate over all XML files except word_index.xml
-for filename in os.listdir(folder):
-    if not filename.endswith(".xml") or filename == index_file:
+for filename in os.listdir(dir):
+    if not filename.endswith(".xml") or filename == word_index:
         continue
 
-    path = os.path.join(folder, filename)
+    path = os.path.join(dir, filename)
     try:
         tree = ET.parse(path)
         root = tree.getroot()
@@ -75,9 +85,9 @@ for filename in os.listdir(folder):
                             ET.SubElement(w, "search-form").text = word
 
                             if tag == "translation":
-                                ET.SubElement(w, "slang").text = translation_lang
+                                ET.SubElement(w, "slang").text = search_lang
                             else:
-                                ET.SubElement(w, "slang").text = text_lang
+                                ET.SubElement(w, "slang").text = data_lang
 
                             ET.SubElement(w, "file-ref").text = os.path.splitext(filename)[0]
 
@@ -89,12 +99,12 @@ for filename in os.listdir(folder):
                                 ET.SubElement(w, "search-form").text = word
 
                                 if tag == "translation":
-                                    ET.SubElement(w, "slang").text = translation_lang
+                                    ET.SubElement(w, "slang").text = search_lang
                                 else:
-                                    ET.SubElement(w, "slang").text = text_lang
+                                    ET.SubElement(w, "slang").text = data_lang
 
                                 ET.SubElement(w, "file-ref").text = os.path.splitext(filename)[0]
-                            
+
                             #w = ET.SubElement(index_root, "word")
                             '''
                             if tag == "headword-form":
@@ -118,9 +128,9 @@ for filename in os.listdir(folder):
                             #ET.SubElement(w, "search-form").text = word
 
                             #if tag == "translation":
-                            #    ET.SubElement(w, "slang").text = translation_lang
+                            #    ET.SubElement(w, "slang").text = search_lang
                             #else:
-                            #    ET.SubElement(w, "slang").text = text_lang
+                            #    ET.SubElement(w, "slang").text = data_lang
                             #print(headword+":"+word+":"+ os.path.splitext(filename)[0])
 
                             #file_ref = os.path.splitext(filename)[0]
@@ -134,4 +144,4 @@ for filename in os.listdir(folder):
 # Write back the index
 index_root[:] = sorted(index_root, key=lambda w: (w.findtext("word-form") or "").lower())
 ET.indent(index_root, space="    ")  # 4 spaces per level
-index_tree.write(index_file, encoding="UTF-8", xml_declaration=True, pretty_print=True)
+index_tree.write(word_index, encoding="UTF-8", xml_declaration=True, pretty_print=True)

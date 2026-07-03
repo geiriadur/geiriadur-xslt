@@ -1,35 +1,3 @@
-from globals import *
-
-'''
-# MOVED TO globals.py
-# GLOBALS
-#
-# CONSTANTS
-
-keys = "keys.yaml" # This is critical to finding the YAML values
-word_index = "word_index.xml"
-dir = "xml"
-default_page_lang = "en"
-
-# VARIABLES (ENGLISH DEFAULTS - CHANGE IN YAML FILE NOT HERE)
-
-not_found = "Not found in dictionary. Please search again."
-no_data = "No data or malformed entry. Please consult your lexicographer."
-xslt_error = "Error processing XML/XSLT"
-lang_results_msg = "Results for {results_lang_name} search"
-search_lang = "en"
-search_lang_name = "English"
-data_lang = "cy"
-data_lang_name = "Welsh"
-search_button_name = "Search"
-page_title = "Welsh Dictionary"
-page_lang = "en"
-
-index_lang = ""
-'''
-
-# CODE FOLLOWS
-
 import lxml.etree as ET
 from urllib.parse import parse_qs
 import os
@@ -37,71 +5,12 @@ import sys
 import re
 from unicodedata import normalize
 
-def transform_html(html):
+# Moved code to globals.py
+#from globals import *
+# Moved code to functions.py
+from functions import *
 
-    html = html.replace("{search_lang_name}", search_lang_name)
-    html = html.replace("{data_lang_name}", data_lang_name)
-    html = html.replace("{search_lang}", search_lang)
-    html = html.replace("{data_lang}", data_lang)
-    html = html.replace("{search_button_name}", search_button_name)
-    html = html.replace("{page_title}", page_title)
-    html = html.replace("{language}", page_lang)
-
-    # Translation keys
-    #print(tkeys)
-    if 'tkeys' in globals():
-      for key, value in tkeys.items():
-        #print(key+"==="+value)
-        html = html.replace(key, value)
-        #globals()[key] = value
-
-    return html
-
-def input_form():
-    html = '''<p>
-      <form id="myForm\" action="/" method="get">
-        {search_lang_name}: <input type="text" id="myInput" name="q">
-        <input type="hidden" name="sl" value="{search_lang}">
-        <input type="hidden" name="lang" value="{language}">
-        <input type="submit" value="{search_button_name}">
-      </form>
-    </p>
-    <p>
-      <form id="myForm2" action="/" method="get">
-        {data_lang_name}: <input type="text" id="myInput2" name="q">
-        <input type="hidden" name="sl" value="{data_lang}">
-        <input type="hidden" name="lang" value="{language}">
-        <input type="submit" value="{search_button_name}">
-      </form>
-    </p>
-    <!--script>
-      document.getElementById("myForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const val = document.getElementById("myInput").value;
-      const query_lang = document.getElementById("slang").value;
-      window.location = "/?" + encodeURIComponent(val);
-      });
-    </script-->'''
-    #html = html.replace("{search_lang_name}", search_lang_name)
-    #html = html.replace("{data_lang_name}", data_lang_name)
-    #html = html.replace("{search_lang}", search_lang)
-    #html = html.replace("{data_lang}", data_lang)
-    #html = html.replace("{search_button_name}", search_button_name)
-    return(html)
-
-def head():
-    head = '''  <title>{page_title}</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="title" property="og:title" content="{page_title}">
-    <meta name="Keywords" content="keywords">
-    <meta name="Description" content="{page_title}">
-    <meta property="og:description" content="{page_title}">
-    <link rel="stylesheet" href="style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">'''
-    #head = head.replace("{page_title}", page_title)
-    return(head)
+# CODE FOLLOWS
 
 #query_string = os.environ.get("QUERY_STRING", "") # only from browser
 query_string = os.environ.get("QUERY_STRING") or (sys.argv[1] if len(sys.argv) > 1 else "") # from browser or command line
@@ -132,41 +41,18 @@ entry = entry.lower()
 #entry = query_string # NO LONGER REQUIRED, SEE ABOVE
 #entry = "llann" # FOR TESTING - NO LONGER REQUIRED, SEE ABOVE
 
-###
-import yaml
+# Moved code to functions.py
 
-from yaml import load
-try:
-    from yaml import CLoader as Loader
-except ImportError:
-    from yaml import Loader
-
-stream = open(keys, 'r')
-dictionary = yaml.load(stream, Loader=yaml.SafeLoader) #safe
-#dictionary = yaml.load(stream) # unsafe
-
-word_index = dictionary.get("word_index")
-dir = dictionary.get("dir")
-default_page_lang = dictionary.get("default_page_lang")
-
+# Default page language if none specified
 if page_lang == "" or not page_lang: page_lang = default_page_lang
 
-#missing = [v for v in ["word_index", "dir", "default_page_lang"] if v not in globals()]
-#for m in missing:
-  #print("Variable \""+ m + "\" is missing in key file.")
+# Gets values required for interface including translations
+get_keys(keys, page_lang)
 
-#present = [v for v in ["word_index", "dir", "default_page_lang"] if v in globals()]
-#for p in present:
-  #print("Variable \""+ p + "\" is present in key file.")
-  #print(p + " == " + globals()[p])
-#print("\n")
-
-value = dictionary.get(page_lang, dictionary["en"])
-#lang = next(k for k, v in dictionary.items() if v is value)
-
-for key, value in value.items():
-  globals()[key] = value
-
+# Moved code to functions.py
+# Fetch results
+results = check_index(entry, query_lang)
+'''
 # Check the index
 file_ref = ""
 if os.path.isfile(word_index):
@@ -194,7 +80,7 @@ file_path = dir + "/" + str(file_ref)+".xml" # New way that works by checking en
 #if os.path.exists(file_path):
 #if os.path.isfile(file_path):
 
-index_tree = ET.parse("word_index.xml")
+index_tree = ET.parse(word_index)
 index_root = index_tree.getroot()
 #matches = index_root.xpath(f'word[word-form="{entry}"]')
 #matches = index_root.xpath(f'word[contains(word-form, "{entry}")]')
@@ -234,6 +120,7 @@ for w in matches:
     #            x.findtext("word-form"),
     #            x.findtext("slang")
     #        ))
+'''
 
 # Deduplicate in the case that all the results point to the same word
 if len({r.split(':')[1] for r in results}) == 1:
@@ -278,7 +165,7 @@ if len(results) == 1:
             res = re.sub(r'(<td>[^<]*?)(\d)', r'\1<sup>\2</sup>', res)
 
             # Translate to interface language
-            res = transform_html(res)
+            res = transform_html(res, page_lang)
 
             print(res)
 
@@ -287,6 +174,8 @@ if len(results) == 1:
             print(xslt_error + ": " + e)
 
 elif len(results) > 15:
+    res = get_res(entry, query_lang)
+    '''
     res = "<!DOCTYPE HTML>\n<html lang=\"" + page_lang + "\">\n  <body>\n"
     res += input_form()
 
@@ -301,6 +190,7 @@ elif len(results) > 15:
 
     #res += "\n    <ul>"
     res = res.replace("<body>", "<head>\n  " + head() + "\n  </head>\n  <body>")
+    '''
 
     # Deduplicate any results found
     results = list({item.split(':')[0]: item for item in results}.values())
@@ -319,15 +209,18 @@ elif len(results) > 15:
     res += "\n  </body>\n</html>"
 
     # Translate to interface language
-    res = transform_html(res)
+    res = transform_html(res, page_lang)
 
     print(res)
 
 elif len(results) > 1:
+    res = get_res(entry, query_lang)
+    '''
     res = "<!DOCTYPE HTML>\n<html lang=\"" + page_lang + "\">\n  <body>\n"
     res += input_form()
 
     if query_lang == search_lang:
+        print(search_lang_name)
         #res += "\n    <b>Results for " +  search_lang_name + " search: <u>" + entry + "</u></b>"
         res += "\n    <b>"+lang_results_msg+": <u>" + entry + "</u></b>"
         res = res.replace("{results_lang_name}", search_lang_name)
@@ -338,8 +231,7 @@ elif len(results) > 1:
 
     res += "\n    <ul>"
     res = res.replace("<body>", "<head>\n  " + head() + "\n  </head>\n  <body>")
-
-    #print(results)
+    '''
 
     # Deduplicate any results found
     results = list({item.split(':')[0]: item for item in results}.values())
@@ -357,12 +249,14 @@ elif len(results) > 1:
     res += "\n    </ul>\n  </body>\n</html>"
 
     # Translate to interface language
-    res = transform_html(res)
+    res = transform_html(res, page_lang)
 
     print(res)
 
 
 else:
+    res = res_no_results(entry, page_lang)
+    '''
     res = "<!DOCTYPE HTML>\n<html lang=\"" + query_lang + "\">\n  <body>\n  </body>\n</html>"
 
     if entry:
@@ -370,9 +264,16 @@ else:
     else:
         res = res.replace("<body>", "<body>\n    " + input_form())
 
+        # Print a random word from the data language
+        if 'random_word_on' in globals() and random_word_on:
+          random_word = random_word(data_lang)
+          random_word = '<a href="/?q=' + random_word + '&sl=' + data_lang + '&lang=' + page_lang + '">' + random_word + '</a>'
+          res = res.replace("</body>", "  " + random_word + "\n</body>")
+
     res = res.replace("<body>", "<head>\n  " + head() + "\n  </head>\n  <body>")
+    '''
 
     # Translate to interface language
-    res = transform_html(res)
+    res = transform_html(res, page_lang)
 
     print(res)

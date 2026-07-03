@@ -3,11 +3,15 @@
 # CONSTANTS
 
 keys = "keys.yaml" # This is critical to finding the YAML values
+
+# VARIABLES (CHANGE IN YAML FILE NOT HERE)
+
 word_index = "word_index.xml"
 dir = "xml"
-default_page_lang = "en"
+default_page_lang = "cy"
+random_word_on = False
 
-# VARIABLES (ENGLISH DEFAULTS - CHANGE IN YAML FILE NOT HERE)
+# ENGLISH DEFAULTS (CHANGE IN YAML FILE NOT HERE)
 
 not_found = "Not found in dictionary. Please search again."
 no_data = "No data or malformed entry. Please consult your lexicographer."
