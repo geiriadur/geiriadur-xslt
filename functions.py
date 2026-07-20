@@ -7,10 +7,12 @@ import re
 
 # FUNCTIONS
 
+'''
+# No longer required
 def get_xml(value, page_lang):
   get_keys(keys, page_lang)
   return globals()[value]
-
+'''
 
 def transform_html(html, page_lang):
     html = html.replace("{search_lang_name}", search_lang_name)
@@ -117,6 +119,46 @@ def head():
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">'''
     #head = head.replace("{page_title}", page_title)
     return(head)
+
+def get_defs(fetch_lang):
+    import yaml
+
+    from yaml import load
+    try:
+        from yaml import CLoader as Loader
+    except ImportError:
+        from yaml import Loader
+
+    stream = open(keys, 'r')
+    dictionary = yaml.load(stream, Loader=yaml.SafeLoader) #safe
+    #dictionary = yaml.load(stream) # unsafe
+
+    defs = []
+
+    for key, value in dictionary.items():
+        if not isinstance(value, dict):
+            defs.append((key, value))
+    #print(defs)
+    return defs
+
+    '''#print(dictionary.keys())
+    data = dictionary
+    for key in dictionary:
+      value = dictionary[key]
+      if isinstance(value, dict):
+          print(f"{key} contains keys")
+          print("<br/>")
+      else:
+          print(f"{key} does not contain keys")
+          print("<br/>")
+    print("<br/>")
+    for key, value in dictionary.items():
+      if isinstance(value, dict):
+          print(f"{key}: has nested items")
+          print("<br/>")
+      else:
+          print(f"{key}: no nested items")
+          print("<br/>")'''
 
 def get_keys(keys, fetch_lang):
     import yaml

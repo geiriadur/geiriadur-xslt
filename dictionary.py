@@ -49,11 +49,17 @@ entry = entry.lower()
 # Default page language if none specified
 if page_lang == "" or not page_lang: page_lang = default_page_lang
 
-# Gets values required for interface including translations
+# Gets translation keys
 get_keys(keys, page_lang)
+# Gets values required for interface
+defs = get_defs(page_lang)
+for key, value in defs:
+    #print(key, value)
+    globals()[key] = value
 
+'''
 # This is a hack because get_keys() isn't getting some of the values from functions.py
-# So we may need a new function get_vars that returns the lot unless they are arrays (i.e. the keys)
+# See above for get_defs that returns the lot unless they are arrays (i.e. the keys)
 vars = [
   "word_index", 
   "dir", 
@@ -65,6 +71,7 @@ vars = [
 for v in vars:
   globals()[v] = get_xml(v, page_lang)
   #print(v+"="+str(globals()[v])+"<br/>")
+'''
 
 # Mae sure that the value given as a parameter isn't overwritten, if present
 # and restrict possible values, though they are not used in an injectable form
@@ -188,8 +195,8 @@ if len(results) == 1:
     word_form = results[0].split(':')[0]
     search_form = results[0].split(':')[1]
     file_ref = results[0].split(':')[2]
-    #file_path = dir + "/" + file_ref + ".xml"
-    file_path = get_xml("dir", page_lang) + "/" + file_ref + ".xml"
+    file_path = dir + "/" + file_ref + ".xml"
+    #file_path = get_xml("dir", page_lang) + "/" + file_ref + ".xml" # not now necessary
 
     if os.path.isfile(file_path):
         try:
