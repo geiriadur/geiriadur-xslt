@@ -2,8 +2,15 @@
 from globals import *
 import lxml.etree as ET
 import os
+from html import escape
+import re
 
 # FUNCTIONS
+
+def get_xml(value, page_lang):
+  get_keys(keys, page_lang)
+  return globals()[value]
+
 
 def transform_html(html, page_lang):
     html = html.replace("{search_lang_name}", search_lang_name)
@@ -13,6 +20,8 @@ def transform_html(html, page_lang):
     html = html.replace("{search_button_name}", search_button_name)
     html = html.replace("{page_title}", page_title)
     html = html.replace("{language}", page_lang)
+    html = html.replace("{regex_label}", regex_label)
+
 
     # Translation keys
     #print(tkeys)
@@ -24,13 +33,43 @@ def transform_html(html, page_lang):
 
     return html
 
-def input_form():
+
+def transform_regex_lebels(res, query_lang, search_lang, regex_on):
+    if query_lang == search_lang:
+        #res += "\n    <b>Results for " +  search_lang_name + " search: <u>" + entry + "</u></b>"
+        #res += "\n    <b>"+lang_results_msg+": <u>" + entry + "</u></b>"
+        # AVOID HTML INJECTION
+        #res += "\n    <b>"+lang_results_msg+": <u>" + escape(entry) + "</u></b>"
+        #res = res.replace("{results_lang_name}", search_lang_name)
+        if regex_on:
+          res = res.replace("{search_regex_checked}", "checked")
+          res = res.replace(" {data_regex_checked}", "")
+        else:
+          res = res.replace(" {search_regex_checked}", "")
+          res = res.replace(" {data_regex_checked}", "")
+    if query_lang == data_lang:
+        #res += "\n    <b>Results for " + data_lang_name + " search: <u>" + entry + "</u></b>"
+        #res += "\n    <b>"+lang_results_msg+": <u>" + entry + "</u></b>"
+        # AVOID HTML INJECTION
+        #res += "\n    <b>"+lang_results_msg+": <u>" + escape(entry) + "</u></b>"
+        #res = res.replace("{results_lang_name}", data_lang_name)
+        if regex_on:
+          res = res.replace(" {search_regex_checked}", "")
+          res = res.replace("{data_regex_checked}", "checked")
+        else:
+          res = res.replace(" {search_regex_checked}", "")
+          res = res.replace(" {data_regex_checked}", "")
+    return res
+
+def input_form(regex_on):
     html = '''<p>
       <form id="myForm\" action="/" method="get">
         {search_lang_name}: <input type="text" id="myInput" name="q">
         <input type="hidden" name="sl" value="{search_lang}">
         <input type="hidden" name="lang" value="{language}">
         <input type="submit" value="{search_button_name}">
+        <!-- {regex_label}? --><!--input type="checkbox" id="regex" name="regex" value="1" {search_regex_checked}-->
+        {search_regex_line}
       </form>
     </p>
     <p>
@@ -39,6 +78,8 @@ def input_form():
         <input type="hidden" name="sl" value="{data_lang}">
         <input type="hidden" name="lang" value="{language}">
         <input type="submit" value="{search_button_name}">
+        <!-- {regex_label}? --><!--input type="checkbox" id="regex" name="regex" value="1" {data_regex_checked}-->
+        {data_regex_line}
       </form>
     </p>
     <!--script>
@@ -49,6 +90,13 @@ def input_form():
       window.location = "/?" + encodeURIComponent(val);
       });
     </script-->'''
+    if regex_tickbox:
+      html = html.replace('{search_regex_line}', '{regex_label}? <input type="checkbox" id="regex" name="regex" value="1" {search_regex_checked}>')
+      html = html.replace('{data_regex_line}', '{regex_label}? <input type="checkbox" id="regex" name="regex" value="1" {data_regex_checked}>')
+    else:
+      html = html.replace("{search_regex_line}", "")
+      html = html.replace("{data_regex_line}", "")
+
     #html = html.replace("{search_lang_name}", search_lang_name)
     #html = html.replace("{data_lang_name}", data_lang_name)
     #html = html.replace("{search_lang}", search_lang)
@@ -83,7 +131,7 @@ def get_keys(keys, fetch_lang):
     dictionary = yaml.load(stream, Loader=yaml.SafeLoader) #safe
     #dictionary = yaml.load(stream) # unsafe
 
-    # These are only local and won't  work outside the function
+    # These are only local and won't work outside the function
     #word_index = dictionary.get("word_index")
     #dir = dictionary.get("dir")
     #default_page_lang = dictionary.get("default_page_lang")
@@ -92,6 +140,8 @@ def get_keys(keys, fetch_lang):
     globals()['dir'] = dictionary.get("dir")
     globals()['default_page_lang'] = dictionary.get("default_page_lang")
     globals()['random_word_on'] = dictionary.get("random_word_on")
+    globals()['regex_on'] = dictionary.get("regex_on")
+    globals()['regex_tickbox'] = dictionary.get("regex_tickbox")
 
     #missing = [v for v in ["word_index", "dir", "default_page_lang"] if v not in globals()]
     #for m in missing:
@@ -121,8 +171,18 @@ def check_index(entry, query_lang):
             # file exists so show xml
             tree = ET.parse(word_index)
             #tree = ET.parse(word_index, parser=ET.XMLParser(encoding="utf-8"))
-            result = tree.xpath(f'//word[search-form="{entry}"]/file-ref/text()')
-            index_lang = tree.xpath(f'//word[search-form="{entry}"]/slang/text()')
+            #result = tree.xpath(f'//word[search-form="{entry}"]/file-ref/text()')
+            # REMOVE XPATH INJECTION
+            result = tree.xpath(
+                '//word[search-form=$term]/file-ref/text()',
+                term=entry
+            )
+            #index_lang = tree.xpath(f'//word[search-form="{entry}"]/slang/text()')
+            # REMOVE XPATH INJECTION
+            index_lang = tree.xpath(
+                '//word[search-form=$term]/slang/text()',
+                term=entry
+            )
             index_lang = index_lang[0] if index_lang else ""
             file_ref = result[0] if result else None
             #print(entry) # FOR TESTING: PRINTS the word searched for
@@ -144,9 +204,20 @@ def check_index(entry, query_lang):
     index_root = index_tree.getroot()
     #matches = index_root.xpath(f'word[word-form="{entry}"]')
     #matches = index_root.xpath(f'word[contains(word-form, "{entry}")]')
-    matches = index_root.xpath(f'word[search-form="{entry}"]')
+    #matches = index_root.xpath(f'word[search-form="{entry}"]')
+    # REMOVE XPATH INJECTION
+    matches = index_root.xpath(
+        'word[search-form=$term]',
+        term=entry
+    )
     if not matches:
-        matches = index_root.xpath(f'word[contains(search-form, "{entry}")]')
+        #matches = index_root.xpath(f'word[contains(search-form, "{entry}")]')
+        # REMOVE XPATH INJECTION
+        matches = index_root.xpath(
+            'word[contains(search-form, $term)]',
+            term=entry
+        )
+
     #matches = index_root.xpath(f'word[starts-with(word-form, "{entry}")]')
 
     #matches = list({(m.findtext("word-form"), m.findtext("slang"), m.findtext("file-ref")): m for m in matches}.values())
@@ -168,6 +239,25 @@ def check_index(entry, query_lang):
             results = sorted(results)
     return results
 
+def check_index_regex(entry, query_lang):
+    pattern = re.compile(entry)
+    results = []
+
+    index_tree = ET.parse(word_index)
+    index_root = index_tree.getroot()
+
+    for w in index_root.xpath('//word'):
+        search_form = w.findtext("search-form", "")
+
+        if pattern.search(search_form) and w.findtext("slang") == query_lang:
+            results.append(
+                w.findtext("word-form") + ":" +
+                w.findtext("search-form") + ":" +
+                w.findtext("file-ref")
+            )
+
+    return sorted(results)
+
 def get_random_word(query_lang):
     results = check_index("", query_lang) # Deliberate empty search
     # Deduplicate any results found
@@ -177,36 +267,79 @@ def get_random_word(query_lang):
     result = random.choice(results).split(':')[0]
     return(result)
 
-def get_res(entry, query_lang):
-    res = "<!DOCTYPE HTML>\n<html lang=\"" + page_lang + "\">\n  <body>\n"
-    res += input_form()
+def get_res(entry, query_lang, regex_on):
+    #res = "<!DOCTYPE HTML>\n<html lang=\"" + page_lang + "\">\n  <body>\n"
+    # SHOULD BE SAFE BUT AVOID HTML INJECTIONJUST IN CASE
+    res = "<!DOCTYPE HTML>\n<html lang=\"" + escape(page_lang) + "\">\n  <body>\n"
+    res += input_form(regex_on)
 
+    #res += "\n    <b>"+lang_results_msg+": <u>" + entry + "</u></b>"
+    # AVOID HTML INJECTION
+    res += "\n    <b>"+lang_results_msg+": <u>" + escape(entry) + "</u></b>"
+    # Change message and slect radio button if regex used
+    #print(search_msg +":"+regex_msg) # FOR TESTING
+    if regex_on:
+      res = res.replace(search_msg + " {results_lang_name}", " " + regex_msg + " {results_lang_name}")
+      res = res.replace("{results_lang_name} "+ search_msg, "{results_lang_name} " + regex_msg)
+      res = res.replace("{regex_checked}", "checked")
+    else:
+    #  res = res.replace(" {results_lang_name}", " " + search_msg + " {results_lang_name}")
+    #  res = res.replace("{results_lang_name} ", "{results_lang_name} " + search_msg)
+      res = res.replace(" {regex_checked}", "")
+
+    res = transform_regex_lebels(res, query_lang, search_lang, regex_on)
     if query_lang == search_lang:
         #res += "\n    <b>Results for " +  search_lang_name + " search: <u>" + entry + "</u></b>"
-        res += "\n    <b>"+lang_results_msg+": <u>" + entry + "</u></b>"
+        #res += "\n    <b>"+lang_results_msg+": <u>" + entry + "</u></b>"
+        # AVOID HTML INJECTION
+        #res += "\n    <b>"+lang_results_msg+": <u>" + escape(entry) + "</u></b>"
         res = res.replace("{results_lang_name}", search_lang_name)
+        '''if regex_on:
+          res = res.replace("{search_regex_checked}", "checked")
+          res = res.replace(" {data_regex_checked}", "")
+        else:
+          res = res.replace(" {search_regex_checked}", "")
+          res = res.replace(" {data_regex_checked}", "")'''
     if query_lang == data_lang:
         #res += "\n    <b>Results for " + data_lang_name + " search: <u>" + entry + "</u></b>"
-        res += "\n    <b>"+lang_results_msg+": <u>" + entry + "</u></b>"
+        #res += "\n    <b>"+lang_results_msg+": <u>" + entry + "</u></b>"
+        # AVOID HTML INJECTION
+        #res += "\n    <b>"+lang_results_msg+": <u>" + escape(entry) + "</u></b>"
         res = res.replace("{results_lang_name}", data_lang_name)
+        '''if regex_on:
+          res = res.replace(" {search_regex_checked}", "")
+          res = res.replace("{data_regex_checked}", "checked")
+        else:
+          res = res.replace(" {search_regex_checked}", "")
+          res = res.replace(" {data_regex_checked}", "")'''
 
     res += "\n    <ul>"
     res = res.replace("<body>", "<head>\n  " + head() + "\n  </head>\n  <body>")
     return res
 
-def res_no_results(entry, query_lang):
+def res_no_results(entry, query_lang, regex_on):
     res = "<!DOCTYPE HTML>\n<html lang=\"" + query_lang + "\">\n  <body>\n  </body>\n</html>"
 
     if entry:
-        res = res.replace("<body>", "<body>\n    " + input_form() + "\n    <p>" + not_found + "</p>")
+        res = res.replace("<body>", "<body>\n    " + input_form(regex_on) + "\n    <p>" + not_found + "</p>")
     else:
-        res = res.replace("<body>", "<body>\n    " + input_form())
+        res = res.replace("<body>", "<body>\n    " + input_form(regex_on))
 
         # Print a random word from the data language
         if 'random_word_on' in globals() and random_word_on:
           random_word = get_random_word(data_lang)
           random_word = '<a href="/?q=' + random_word + '&sl=' + data_lang + '&lang=' + query_lang + '">' + random_word + '</a>'
           res = res.replace("</body>", "  " + random_word + "\n</body>")
+
+    res = transform_regex_lebels(res, query_lang, search_lang, regex_on)
+    # Select radio button if regex used
+    '''if regex_on:
+      res = res.replace(" {search_regex_checked}", "")
+      res = res.replace("{data_regex_checked}", "checked")
+    else:
+      res = res.replace(" {search_regex_checked}", "")
+      res = res.replace(" {data_regex_checked}", "")'''
+
 
     res = res.replace("<body>", "<head>\n  " + head() + "\n  </head>\n  <body>")
     return res

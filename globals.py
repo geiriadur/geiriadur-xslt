@@ -10,6 +10,8 @@ word_index = "word_index.xml"
 dir = "xml"
 default_page_lang = "cy"
 random_word_on = False
+regex_on = False
+regex_tickbox = False
 
 # ENGLISH DEFAULTS (CHANGE IN YAML FILE NOT HERE)
 
@@ -19,10 +21,13 @@ xslt_error = "Error processing XML/XSLT"
 lang_results_msg = "Results for {results_lang_name} search"
 search_lang = "en"
 search_lang_name = "English"
+search_msg: "search"
+regex_msg: "regular expression"
 data_lang = "cy"
 data_lang_name = "Welsh"
 search_button_name = "Search"
 page_title = "Welsh Dictionary"
 page_lang = "en"
+regex_label = "Regular expression"
 
 index_lang = ""

@@ -1,8 +1,10 @@
 # Note that the space after the colon is important in YAML
 word_index: word_index.xml
 dir: xml
-default_page_lang: en
+default_page_lang: cy
 random_word_on: True
+regex_on: False
+regex_tickbox: True
 
 cy:
   # Constants
@@ -12,10 +14,13 @@ cy:
   lang_results_msg: Canlyniadau ar gyfer chwiliad {results_lang_name}
   search_lang: en
   search_lang_name: Saesneg
+  search_msg: chwiliad
+  regex_msg: mynegiad rheolaidd
   data_lang: cy
   data_lang_name: Cymraeg
   search_button_name: Chwilio
   page_title: Welsh Dictionary
+  regex_label: Mynegiad rheolaidd
 
   # Won't normally work in the data language
   # unless the code is modified because
@@ -57,10 +62,13 @@ en:
   lang_results_msg: Results for {results_lang_name} search
   search_lang: en
   search_lang_name: English
+  search_msg: search
+  regex_msg: regular expression
   data_lang: cy
   data_lang_name: Welsh
   search_button_name: Search
   page_title: Welsh Dictionary
+  regex_label: Regular expression
 
   # For the <translation> field
   stopwords: ["or", "and", "ones", "one"]

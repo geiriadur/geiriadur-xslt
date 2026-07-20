@@ -22,6 +22,7 @@ params = parse_qs(query_string)
 entry = params.get("q", [""])[0]
 query_lang = params.get("sl", [""])[0]
 page_lang = params.get("lang", [""])[0]
+regex_on = params.get("regex", [""])[0]
 #print("Content-Type: text/plain\n")
 #print(f"Entry: {entry}")
 #print(f"  Lang: {page_lang}")
@@ -34,6 +35,8 @@ page_lang = params.get("lang", [""])[0]
 entry = normalize("NFC", entry)
 # remove unsafe characters, allow only letters, numbers, dash, underscore and unicode
 entry = re.sub(r'[<>:"/\\|?*]', '', entry)
+# allow regex characters back in after checking code for HTML and XPATH insertion
+entry = re.sub(r'[<>:"/\\]', '', entry)
 
 # make it lower case for searches
 entry = entry.lower()
@@ -49,9 +52,47 @@ if page_lang == "" or not page_lang: page_lang = default_page_lang
 # Gets values required for interface including translations
 get_keys(keys, page_lang)
 
+# This is a hack because get_keys() isn't getting some of the values from functions.py
+# So we may need a new function get_vars that returns the lot unless they are arrays (i.e. the keys)
+vars = [
+  "word_index", 
+  "dir", 
+  "default_page_lang", 
+  "random_word_on", 
+  "regex_on", 
+  "regex_tickbox"
+  ]
+for v in vars:
+  globals()[v] = get_xml(v, page_lang)
+  #print(v+"="+str(globals()[v])+"<br/>")
+
+# Mae sure that the value given as a parameter isn't overwritten, if present
+# and restrict possible values, though they are not used in an injectable form
+regex_on = params.get("regex", [""])[0]
+if regex_on == "True" or regex_on == "1": regex_on = True
+else: regex_on = False
+
 # Moved code to functions.py
 # Fetch results
-results = check_index(entry, query_lang)
+#results = check_index(entry, query_lang)
+# Check if regex
+is_regex = any(c in entry for c in r".^$*+?{}[]\|()")
+#print(entry)
+#print(entry, is_regex)
+try:
+    re.compile(entry)
+    valid_regex = True
+except re.error:
+    valid_regex = False
+#print(regex_on)
+if is_regex and valid_regex and regex_on:
+    #print("regex") # FOR TESTING
+    # Fetch results via regex
+    results = check_index_regex(entry, query_lang)
+else:
+    # Fetch results normally
+    results = check_index(entry, query_lang)
+
 '''
 # Check the index
 file_ref = ""
@@ -132,11 +173,23 @@ if len({r.split(':')[1] for r in results}) == 1:
     #    if not (r.split(':')[1] in seen or seen.add(r.split(':')[1]))
     #]
 
+# Deduplicate any results found
+results = list({item.split(':')[0]: item for item in results}.values())
+#seen = set()
+#results = [
+#    r for r in results
+#    if not (r.split(':')[0] in seen or seen.add(r.split(':')[0]))
+#]
+
+#print(len(results))
+#print(results)
+
 if len(results) == 1:
     word_form = results[0].split(':')[0]
     search_form = results[0].split(':')[1]
     file_ref = results[0].split(':')[2]
-    file_path = dir + "/" + file_ref + ".xml"
+    #file_path = dir + "/" + file_ref + ".xml"
+    file_path = get_xml("dir", page_lang) + "/" + file_ref + ".xml"
 
     if os.path.isfile(file_path):
         try:
@@ -156,13 +209,27 @@ if len(results) == 1:
             res = transform(html)
             res = ET.tostring(res, pretty_print=True, encoding="unicode")
             res = "<!DOCTYPE HTML>\n" + res
-            res = res.replace("<body>", "<body>\n    " + input_form())
+            res = res.replace("<body>", "<body>\n    " + input_form(regex_on))
             res = res.replace("<html>", "<html lang=\"" + page_lang + "\">")
             res = res.replace('<table border="1"/>', "<p>" + no_data + "</p>")
             res = res.replace("<body>", "<head>\n  " + head() + "\n  </head>\n  <body>")
 
             # This line superscripts digits
             res = re.sub(r'(<td>[^<]*?)(\d)', r'\1<sup>\2</sup>', res)
+
+            res = transform_regex_lebels(res, query_lang, search_lang, regex_on)
+            '''if regex_on:
+              if query_lang == search_lang:
+                print("search")
+                res = res.replace("{search_regex_checked}", "checked")
+                res = res.replace(" {data_regex_checked}", "")
+              elif query_lang == data_lang:
+                print("data")
+                res = res.replace(" {search_regex_checked}", "")
+                res = res.replace("{data_regex_checked}", "checked")
+            else:
+              res = res.replace(" {search_regex_checked}", "")
+              res = res.replace(" {data_regex_checked}", "")'''
 
             # Translate to interface language
             res = transform_html(res, page_lang)
@@ -174,7 +241,7 @@ if len(results) == 1:
             print(xslt_error + ": " + e)
 
 elif len(results) > 15:
-    res = get_res(entry, query_lang)
+    res = get_res(entry, query_lang, regex_on)
     '''
     res = "<!DOCTYPE HTML>\n<html lang=\"" + page_lang + "\">\n  <body>\n"
     res += input_form()
@@ -192,8 +259,8 @@ elif len(results) > 15:
     res = res.replace("<body>", "<head>\n  " + head() + "\n  </head>\n  <body>")
     '''
 
-    # Deduplicate any results found
-    results = list({item.split(':')[0]: item for item in results}.values())
+    # Deduplicate any results found [MOVED UP]
+    #results = list({item.split(':')[0]: item for item in results}.values())
     #seen = set()
     #results = [
     #    r for r in results
@@ -214,7 +281,7 @@ elif len(results) > 15:
     print(res)
 
 elif len(results) > 1:
-    res = get_res(entry, query_lang)
+    res = get_res(entry, query_lang, regex_on)
     '''
     res = "<!DOCTYPE HTML>\n<html lang=\"" + page_lang + "\">\n  <body>\n"
     res += input_form()
@@ -233,8 +300,8 @@ elif len(results) > 1:
     res = res.replace("<body>", "<head>\n  " + head() + "\n  </head>\n  <body>")
     '''
 
-    # Deduplicate any results found
-    results = list({item.split(':')[0]: item for item in results}.values())
+    # Deduplicate any results found [MOVED UP]
+    #results = list({item.split(':')[0]: item for item in results}.values())
     #seen = set()
     #results = [
     #    r for r in results
@@ -255,7 +322,7 @@ elif len(results) > 1:
 
 
 else:
-    res = res_no_results(entry, page_lang)
+    res = res_no_results(entry, page_lang, regex_on)
     '''
     res = "<!DOCTYPE HTML>\n<html lang=\"" + query_lang + "\">\n  <body>\n  </body>\n</html>"
 
