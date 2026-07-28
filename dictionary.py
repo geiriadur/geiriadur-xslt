@@ -307,7 +307,11 @@ elif len(results) > 15:
         #res += '\n        <li><a href="/?q=' + r + '&sl=' + data_lang + '">' + r + '</a></li>'
         r = r.split(':')[0]
         #res += '\n        <a href="/?q=' + r + '&sl=' + data_lang + '">' + r + '</a>&nbsp;'
-        res += '\n        <a href="/?q=' + r + '&sl=' + data_lang + '&lang='+ page_lang + '">' + r + '</a>&nbsp;'
+        res_add = '\n        <a href="/?q=' + r + '&sl=' + data_lang + '&lang='+ page_lang + '">' + r + '</a>&nbsp;'
+        res_add = res_add.replace('">', '&regex='+str(int(regex_on))+'&x='+str(int(xslt_alt_on))+'">')
+        res += res_add
+
+
     res += "\n  </body>\n</html>"
 
     # Translate to interface language
@@ -347,7 +351,9 @@ elif len(results) > 1:
         #res += "<li>" + r + "</li>"
         r = r.split(':')[0]
         #res += '\n        <li><a href="/?q=' + r + '&sl=' + data_lang + '">' + r + '</a></li>'
-        res += '\n        <li><a href="/?q=' + r + '&sl=' + data_lang + '&lang='+ page_lang + '">' + r + '</a></li>'
+        res_add = '\n        <li><a href="/?q=' + r + '&sl=' + data_lang + '&lang='+ page_lang + '">' + r + '</a></li>'
+        res_add = res_add.replace('">', '&regex='+str(int(regex_on))+'&x='+str(int(xslt_alt_on))+'">')
+        res += res_add
     res += "\n    </ul>\n  </body>\n</html>"
 
     # Translate to interface language
