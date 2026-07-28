@@ -1,0 +1,9 @@
+Versions 0.1 - 0.6
+
+- Built indexer
+- XSLT transformation of XML
+- Default globals and YAML setup file
+- Searchable in two, later multiple languegs
+- Added regular expression search
+- Added advanced/alternative view
+- Bilingual, later multilingual interface
