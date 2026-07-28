@@ -8,7 +8,7 @@ gan / by Dr Talat Zafar Chaudhri
 
 ### Fersiwn / Version 0.1
 
-### Gweler / See release_notes_v0.1.txt
+### Gweler / See prerelease_notes.txt
 
 ### Dibyniaethau / Dependencies:
 
@@ -25,6 +25,7 @@ lxml
 urllib  
 os  
 sys  
+html  
 re  
 unicodedata  
 yaml  
