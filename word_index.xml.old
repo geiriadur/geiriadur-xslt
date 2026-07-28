@@ -25,24 +25,6 @@
         <file-ref>pen</file-ref>
     </word>
     <word>
-        <word-form>llan</word-form>
-        <search-form>coemeterium</search-form>
-        <slang>la</slang>
-        <file-ref>pen</file-ref>
-    </word>
-    <word>
-        <word-form>llan</word-form>
-        <search-form>ecclesiae</search-form>
-        <slang>la</slang>
-        <file-ref>pen</file-ref>
-    </word>
-    <word>
-        <word-form>llan</word-form>
-        <search-form>locus</search-form>
-        <slang>la</slang>
-        <file-ref>pen</file-ref>
-    </word>
-    <word>
         <word-form>pen</word-form>
         <search-form>pen</search-form>
         <slang>cy</slang>
