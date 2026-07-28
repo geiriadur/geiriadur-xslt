@@ -1,5 +1,5 @@
 from globals import *
-from functions import get_keys
+from functions import get_defs, get_keys
 
 # CONSTANTS
 
@@ -7,7 +7,8 @@ from functions import get_keys
 #stopwords = ["or", "and", "ones", "one"]
 
 # Gets values required for indexer
-get_keys()
+get_defs("")
+get_keys(keys, page_lang)
 # Have to do this again to get the results
 from functions import *
 
@@ -50,6 +51,8 @@ for filename in os.listdir(dir):
                 #word = elem.text.strip()
                 # New code to allow searching the words in the translation
                 entry = elem.text.strip()
+                lang = elem.get("lang", "")
+                print(entry, lang)
                 # With Python's split you can only use one delimiter at a time
                 #words = entry.split(",")
                 # Old method split all fields, not just translation
@@ -99,7 +102,7 @@ for filename in os.listdir(dir):
                                 ET.SubElement(w, "search-form").text = word
 
                                 if tag == "translation":
-                                    ET.SubElement(w, "slang").text = search_lang
+                                    ET.SubElement(w, "slang").text = lang # or search_lang
                                 else:
                                     ET.SubElement(w, "slang").text = data_lang
 

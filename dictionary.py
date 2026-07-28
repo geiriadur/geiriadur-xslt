@@ -20,9 +20,11 @@ query_string = os.environ.get("QUERY_STRING") or (sys.argv[1] if len(sys.argv) >
 params = parse_qs(query_string)
 #print(params)
 entry = params.get("q", [""])[0]
+#entry_data_lang = params.get("qd", [""])[0]
 query_lang = params.get("sl", [""])[0]
 page_lang = params.get("lang", [""])[0]
-regex_on = params.get("regex", [""])[0]
+#regex_on = params.get("regex", [""])[0]
+#xslt_alt = params.get("x", [""])[0] # For alt xslt view
 #print("Content-Type: text/plain\n")
 #print(f"Entry: {entry}")
 #print(f"  Lang: {page_lang}")
@@ -33,13 +35,17 @@ regex_on = params.get("regex", [""])[0]
 # normalise to make it safe
 #entry = normalize("NFC", query_string)
 entry = normalize("NFC", entry)
+#entry_data_lang = normalize("NFC", entry_data_lang)
 # remove unsafe characters, allow only letters, numbers, dash, underscore and unicode
-entry = re.sub(r'[<>:"/\\|?*]', '', entry)
+#entry = re.sub(r'[<>:"/\\|?*]', '', entry)
+#entry_data_lang = re.sub(r'[<>:"/\\|?*]', '', entry_data_lang)
 # allow regex characters back in after checking code for HTML and XPATH insertion
 entry = re.sub(r'[<>:"/\\]', '', entry)
+#entry_data_lang = re.sub(r'[<>:"/\\]', '', entry_data_lang)
 
 # make it lower case for searches
 entry = entry.lower()
+#entry_data_lang = entry_data_lang.lower()
 
 #entry = query_string # NO LONGER REQUIRED, SEE ABOVE
 #entry = "llann" # FOR TESTING - NO LONGER REQUIRED, SEE ABOVE
@@ -56,6 +62,13 @@ defs = get_defs(page_lang)
 for key, value in defs:
     #print(key, value)
     globals()[key] = value
+
+# DEFUNCT
+# This repairs the data language queries when only one form is used
+#if query_lang == data_lang:
+  #print("cy")
+  #entry = entry_data_lang
+#else: print("en")
 
 '''
 # This is a hack because get_keys() isn't getting some of the values from functions.py
@@ -78,6 +91,20 @@ for v in vars:
 regex_on = params.get("regex", [""])[0]
 if regex_on == "True" or regex_on == "1": regex_on = True
 else: regex_on = False
+
+xslt_setting = xslt_default # Default setting
+# Mae sure that the value given as a parameter isn't overwritten, if present
+# and restrict possible values, though they are not used in an injectable form
+xslt_param = params.get("x", [""])[0]
+if xslt_alt_enabled:
+    if xslt_param: xslt_alt_on = xslt_param # Check parameter is enabled before setting
+    if xslt_alt_on == "True" or xslt_alt_on == "1": xslt_alt_on = True # For the user parameter
+    else: xslt_alt_on = False # Disable any other values 
+    if xslt_alt_on: xslt_setting = xslt_alt
+    else: xslt_setting = xslt_default
+else:
+    xslt_setting = xslt_default
+#print(xslt_setting)
 
 # Moved code to functions.py
 # Fetch results
@@ -211,12 +238,13 @@ if len(results) == 1:
                 #if target not in entry.findtext('//', ''):
                     root.remove(entry)
 
-            xslt = ET.parse("entry.xsl")
+            #xslt = ET.parse("entry.xsl")
+            xslt = ET.parse(xslt_setting)
             transform = ET.XSLT(xslt)
             res = transform(html)
             res = ET.tostring(res, pretty_print=True, encoding="unicode")
             res = "<!DOCTYPE HTML>\n" + res
-            res = res.replace("<body>", "<body>\n    " + input_form(regex_on))
+            res = res.replace("<body>", "<body>\n    " + input_form(query_string, query_lang, page_lang, regex_on))
             res = res.replace("<html>", "<html lang=\"" + page_lang + "\">")
             res = res.replace('<table border="1"/>', "<p>" + no_data + "</p>")
             res = res.replace("<body>", "<head>\n  " + head() + "\n  </head>\n  <body>")
@@ -224,7 +252,7 @@ if len(results) == 1:
             # This line superscripts digits
             res = re.sub(r'(<td>[^<]*?)(\d)', r'\1<sup>\2</sup>', res)
 
-            res = transform_regex_lebels(res, query_lang, search_lang, regex_on)
+            res = transform_regex_labels(res, query_lang, regex_on, xslt_alt_on)
             '''if regex_on:
               if query_lang == search_lang:
                 print("search")
@@ -248,10 +276,10 @@ if len(results) == 1:
             print(xslt_error + ": " + e)
 
 elif len(results) > 15:
-    res = get_res(entry, query_lang, regex_on)
+    res = get_res(entry, query_string, query_lang, page_lang, regex_on, xslt_alt_on)
     '''
     res = "<!DOCTYPE HTML>\n<html lang=\"" + page_lang + "\">\n  <body>\n"
-    res += input_form()
+    res += input_form(query_nag, regex_on)
 
     if query_lang == search_lang:
         #res += "\n    <b>Results for " +  search_lang_name + " search: <u>" + entry + "</u></b>"
@@ -288,10 +316,10 @@ elif len(results) > 15:
     print(res)
 
 elif len(results) > 1:
-    res = get_res(entry, query_lang, regex_on)
+    res = get_res(entry, query_string, query_lang, page_lang, regex_on, xslt_alt_on)
     '''
     res = "<!DOCTYPE HTML>\n<html lang=\"" + page_lang + "\">\n  <body>\n"
-    res += input_form()
+    res += input_form(query_lang, regex_on)
 
     if query_lang == search_lang:
         print(search_lang_name)
@@ -329,14 +357,14 @@ elif len(results) > 1:
 
 
 else:
-    res = res_no_results(entry, page_lang, regex_on)
+    res = res_no_results(entry, query_string, query_lang, page_lang, regex_on, xslt_alt_on)
     '''
     res = "<!DOCTYPE HTML>\n<html lang=\"" + query_lang + "\">\n  <body>\n  </body>\n</html>"
 
     if entry:
-        res = res.replace("<body>", "<body>\n    " + input_form() + "\n    <p>" + not_found + "</p>")
+        res = res.replace("<body>", "<body>\n    " + input_form(query_lang, regex_on) + "\n    <p>" + not_found + "</p>")
     else:
-        res = res.replace("<body>", "<body>\n    " + input_form())
+        res = res.replace("<body>", "<body>\n    " + input_form(query_lang, regex_on))
 
         # Print a random word from the data language
         if 'random_word_on' in globals() and random_word_on:

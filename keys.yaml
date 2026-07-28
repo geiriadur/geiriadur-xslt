@@ -5,6 +5,15 @@ default_page_lang: cy
 random_word_on: True
 regex_on: False
 regex_tickbox: True
+xslt_default: entry.xsl
+xslt_alt: entry_alt.xsl
+xslt_alt_on: False
+xslt_alt_enabled: True
+#langs: ['cy' ,'en' ,'la', 'da']
+search_langs: ['cy' ,'en' ,'la']
+interface_langs: ['cy' ,'en' ,'la', 'da']
+data_lang: cy
+current_lang_label: True
 
 cy:
   # Constants
@@ -12,15 +21,20 @@ cy:
   no_data: Dim data neu gofnod ar ffurf wael. Cysylltwch â'ch geiriadurwr.
   xslt_error: Gwall yn prosesu XML/XSLT
   lang_results_msg: Canlyniadau ar gyfer chwiliad {results_lang_name}
-  search_lang: en
-  search_lang_name: Saesneg
+  lang1: cy
+  lang1_name: Cymraeg
+  lang2: en
+  lang2_name: Saesneg
+  lang3: la
+  lang3_name: Lladin
+  lang4: da
+  lang4_name: Daneg
   search_msg: chwiliad
   regex_msg: mynegiad rheolaidd
-  data_lang: cy
-  data_lang_name: Cymraeg
   search_button_name: Chwilio
-  page_title: Welsh Dictionary
+  page_title: Geiriadur Cymraeg
   regex_label: Mynegiad rheolaidd
+  xslt_alt_label: Golwg uwch
 
   # Won't normally work in the data language
   # unless the code is modified because
@@ -53,6 +67,8 @@ cy:
     'Sense:': 'Saesneg:'
     'Status:': 'Statws:'
     'Notes:': 'Nodiadau:'
+    '{en}': 'Saesneg'
+    '{la}': 'Lladin'
 
 en:
   # Constants
@@ -60,18 +76,129 @@ en:
   no_data: No data or malformed entry. Please consult your lexicographer.
   xslt_error: Error processing XML/XSLT
   lang_results_msg: Results for {results_lang_name} search
-  search_lang: en
-  search_lang_name: English
+  lang1: cy
+  lang1_name: Welsh
+  lang2: en
+  lang2_name: English
+  lang3: la
+  lang3_name: Latin
+  lang4: da
+  lang4_name: Danish
   search_msg: search
   regex_msg: regular expression
-  data_lang: cy
-  data_lang_name: Welsh
   search_button_name: Search
   page_title: Welsh Dictionary
   regex_label: Regular expression
+  xslt_alt_label: Advanced view
 
   # For the <translation> field
   stopwords: ["or", "and", "ones", "one"]
 
   tkeys:
     'Sense:': 'English:'
+    '{en}': 'English'
+    '{la}': 'Latin'
+
+la:
+  # Constants
+  not_found: In dictionario non inventum. Iterum quaere.
+  no_data: Nulla data vel inscriptio male formata. Quaeso lexicographum tuum consule.
+  xslt_error: Error in XML/XSLT tractando.
+  lang_results_msg: Resultata inquisitionis {results_lang_name}
+  lang1: cy
+  lang1_name: Cambrice
+  lang2: en
+  lang2_name: Anglice
+  lang3: la
+  lang3_name: Latine
+  lang4: da
+  lang4_name: Danice
+  search_msg: inquisitionis
+  regex_msg: expressionis regularis
+  search_button_name: Quaere
+  page_title: Dictionarium Cambricum
+  regex_label: Expressio regularis
+  xslt_alt_label: Aspectus provectus
+
+  stopwords: ["et", "vel"]
+
+  tkeys:
+    # Translation keys
+    adjective: adiectivum
+    feminine: femininus
+    finite-verb: verbum finitum
+    masculine: masculinus
+    noun: nomen
+    plural: pluralis
+    pronoun: pronomen
+    singular: singularis
+    verb-noun: nomen verbale
+
+    imperfective: imperfectivus
+    indicative: indicativum
+    present: praesens
+
+    'Headword:': 'Verbum principale:'
+    'Etymology:': 'Etymologia:'
+    'Part of Speech:': 'Pars oratonis:'
+    'Person:': 'Persona:'
+    'Gender:': 'Genus:'
+    'Number:': 'Numerus:'
+    'Plural:': 'Pluralis:'
+    'Sense:': 'Anglice:'
+    'Status:': 'Status:'
+    'Notes:': 'Notae:'
+    '{en}': 'Anglice'
+    '{la}': 'Latine'
+
+da:
+  # Constants
+  not_found: Ikke fundet i ordbogen. Søg venligst igen.
+  no_data: Ingen data eller fejlformet post. Kontakt venligst leksikografen
+  xslt_error: Fejl ved behandling af XML/XSLT
+  lang_results_msg: Resultater for søgning på {results_lang_name}
+  lang1: cy
+  lang1_name: Walisisk
+  lang2: en
+  lang2_name: Engelsk
+  lang3: la
+  lang3_name: Latin
+  lang4: da
+  lang4_name: Dansk
+  search_msg: søge
+  regex_msg: regulært udtryk
+  search_button_name: Søge
+  page_title: Walisisk ordbog
+  regex_label: Regulært udtryk
+  xslt_alt_label: Avanceret visning
+
+  stopwords: ["af"]
+
+  tkeys:
+    # Translation keys
+    adjective: adjektiv
+    feminine: feminin
+    finite-verb: finit verbum
+    masculine: maskulin
+    noun: navneord
+    plural: flertalsform
+    pronoun: stedord
+    singular: entalsform
+    verb-noun: verbalsubstantiv
+
+    imperfective: imperfektiv
+    indicative: indikativ
+    present: nutid
+
+    'Headword:': 'Opslagsord:'
+    'Etymology:': 'Etymologi:'
+    'Part of Speech:': 'Ordklasse:'
+    'Person:': 'Person:'
+    'Gender:': 'Køn:'
+    'Number:': 'Tal:'
+    'Plural:': 'Flertalsform:'
+    'Sense:': 'Engelsk:'
+    'Status:': 'Status:'
+    'Noter:': 'Notae:'
+    '{en}': 'Engelsk'
+    '{la}': 'Latin'

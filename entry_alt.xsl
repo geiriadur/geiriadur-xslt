@@ -22,13 +22,13 @@
                                 </tr>
                             </xsl:if>
                         </xsl:for-each>
-                        <!--xsl:for-each select="etymology">
+                        <xsl:for-each select="etymology">
                             <xsl:if test="string(.) != ''">
-                                <tr-->
+                                <tr>
                                     <!--td>Etymology: </td-->
                                     <!-- May be one or more of multiple languages /-->
                                     <!--td lang="cy"><xsl:value-of select="."/></td-->
-                                    <!--xsl:choose>
+                                    <xsl:choose>
                                         <xsl:when test="not(@lang) or @lang=''">
                                             <td>Etymology: </td>
                                             <td><xsl:value-of select="."/></td>
@@ -37,11 +37,11 @@
                                             <td>Etymology: </td>
                                             <td lang="{@lang}"><xsl:value-of select="."/></td>
                                         </xsl:otherwise>
-                                    </xsl:choose-->
+                                    </xsl:choose>
                                     <!--td><xsl:value-of select="."/></td-->
-                                <!--/tr>
+                                </tr>
                             </xsl:if>
-                        </xsl:for-each-->
+                        </xsl:for-each>
                         <xsl:for-each select="part-of-speech">
                             <xsl:if test="string(.) != ''">
                                 <tr>
@@ -91,15 +91,15 @@
                                     </tr>
                                 </xsl:if>
                             </xsl:for-each>
-                            <!--xsl:for-each select="etymology">
+                            <xsl:for-each select="etymology">
                                 <xsl:if test="string(.) != ''">
                                     <tr>
-                                        <td>Etymology: </td-->
+                                        <td>Etymology: </td>
                                         <!-- May be one or more of multiple languages /-->
                                         <!--td lang="cy"><xsl:value-of select="."/></td-->
-                                        <!--td><xsl:value-of select="."/-->
+                                        <td><xsl:value-of select="."/>
                                             <!-- Add (note) only if @note exists and is not empty -->
-                                            <!--xsl:if test="@note">
+                                            <xsl:if test="@note">
                                                 <xsl:text> (</xsl:text>
                                                 <xsl:value-of select="@note"/>
                                                 <xsl:text>)</xsl:text>
@@ -107,7 +107,7 @@
                                         </td>
                                     </tr>
                                 </xsl:if>
-                            </xsl:for-each-->
+                            </xsl:for-each>
                         </xsl:for-each>
                     </xsl:for-each>
                     <xsl:for-each select="//entry/body/sense">
