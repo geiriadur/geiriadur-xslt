@@ -9,7 +9,6 @@ xslt_default: entry.xsl
 xslt_alt: entry_alt.xsl
 xslt_alt_on: False
 xslt_alt_enabled: True
-#langs: ['cy' ,'en' ,'la', 'da']
 search_langs: ['cy' ,'en' ,'la']
 interface_langs: ['cy' ,'en' ,'la', 'da']
 data_lang: cy
@@ -120,6 +119,7 @@ la:
   regex_label: Expressio regularis
   xslt_alt_label: Aspectus provectus
 
+  # For the <translation> field
   stopwords: ["et", "vel"]
 
   tkeys:
@@ -172,6 +172,7 @@ da:
   regex_label: Regulært udtryk
   xslt_alt_label: Avanceret visning
 
+  # For the <translation> field
   stopwords: ["af"]
 
   tkeys:

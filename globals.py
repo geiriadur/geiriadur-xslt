@@ -3,24 +3,24 @@
 # CONSTANTS
 
 keys = "keys.yaml" # This is critical to finding the YAML values
+word_index = "word_index.xml" # Index file
+dir = "xml" # Location of XML entries
+default_page_lang = "cy"
+random_word_on = False # Show a random word on opening
+regex_tickbox = False # Show regex tickbox in interface
 xslt_default = "entry.xml" # This is the default XSLT
 xslt_alt = "entry_alt.xsl" # This is the alt XSLT
-xslt_alt_on = False # The default is False
-xslt_alt_enabled = False # The default is False
-current_lang_label = True # The default is True
+xslt_alt_enabled = False # Allows alt view
+search_langs = ["cy" ,"en"]
+interface_langs = ["cy" ,"en"]
+data_lang = "cy" # Language of dictionary entries
+current_lang_label = True # Show current language in interface labels
 
 # VARIABLES (CHANGE IN YAML FILE NOT HERE)
 
-word_index = "word_index.xml"
-dir = "xml"
-default_page_lang = "cy"
-random_word_on = False
 regex_on = False
-regex_tickbox = False
-#langs = ["cy", "en"]
-search_langs = ["cy" ,"en"]
-interface_langs = ["cy" ,"en"]
-data_lang = "cy"
+xslt_alt_on = False
+
 
 # ENGLISH DEFAULTS (CHANGE IN YAML FILE NOT HERE)
 
