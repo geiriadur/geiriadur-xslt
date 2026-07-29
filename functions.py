@@ -90,9 +90,9 @@ def input_form(query_string, query_lang, page_lang, regex_on):
     else:
         html = html.replace("{lang_section}", "")
     if regex_tickbox:
-      html = html.replace('{regex_line}', '{regex_label}? <input type="checkbox" id="regex" name="regex" value="1" {regex_checked}>')
+      html = html.replace('{regex_line}<br/>', '{regex_label}? <input type="checkbox" id="regex" name="regex" value="1" {regex_checked}><br/>')
     else:
-      html = html.replace("{regex_line}", "")
+      html = html.replace("{regex_line}<br/>", "")
     if xslt_alt_enabled:
       html = html.replace('{xslt_line}', '{xslt_alt_label}? <input type="checkbox" id="xslt_alt" name="x" value="1" {xslt_alt_checked}>')
     else:
