@@ -1,4 +1,4 @@
-Versions 0.1 - 0.6
+Versions 0.1 - 0.6.1
 
 - Built indexer
 - Built XSLT engine for transformation of XML
