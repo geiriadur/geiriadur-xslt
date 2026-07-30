@@ -16,6 +16,8 @@ interface_langs = ["cy" ,"en"]
 data_lang = "cy" # Language of dictionary entries
 current_lang_label = True # Show current language in interface labels
 
+tags = ["headword-form", "plural-form", "fem-form", "translation"] # Fields to index: sudo python3 indexer.py
+
 # VARIABLES (CHANGE IN YAML FILE NOT HERE)
 
 regex_on = False

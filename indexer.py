@@ -36,7 +36,7 @@ for filename in os.listdir(dir):
         root = tree.getroot()
 
         # Find all headword-form, plural-form, fem-form elements
-        for tag in ["headword-form", "plural-form", "fem-form", "translation"]:
+        for tag in tags:
             for elem in root.xpath(f"//{tag}"):
                 # New code to allow searching the words in the translation
                 entry = elem.text.strip()

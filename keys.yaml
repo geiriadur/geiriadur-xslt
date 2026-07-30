@@ -13,6 +13,7 @@ search_langs: ['cy' ,'en' ,'la']
 interface_langs: ['cy' ,'en' ,'la', 'da']
 data_lang: cy
 current_lang_label: True
+tags: ['headword-form', 'plural-form', 'fem-form', 'translation']
 
 cy:
   # Constants
