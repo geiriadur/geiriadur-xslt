@@ -17,6 +17,9 @@ data_lang = "cy" # Language of dictionary entries
 current_lang_label = True # Show current language in interface labels
 
 tags = ["headword-form", "plural-form", "fem-form", "translation"] # Fields to index: sudo python3 indexer.py
+word_form_tags = ['headword-form'] # Headword tag(s)
+entry_tags = ['entry'] # Name of entry element
+full_text_tags = [] # Any tags whose full text is to be parsed regardless of sub-elements
 
 # VARIABLES (CHANGE IN YAML FILE NOT HERE)
 
