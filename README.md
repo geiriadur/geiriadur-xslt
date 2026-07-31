@@ -6,7 +6,7 @@ Geiriadur sy'n storio data fel XML ac sy'n rhoi canlyniadau drwy XSLT / Dictiona
 
 gan / by Dr Talat Zafar Chaudhri
 
-### Fersiwn / Version 0.6.2
+### Fersiwn / Version 0.7
 
 ### Gweler / See prerelease_notes.txt
 

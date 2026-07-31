@@ -8,5 +8,5 @@ Versions 0.1 - 0.6.1
 - Added advanced/alternative view
 - Bilingual, later multilingual interface
 
-Version 0.6.2
+Version 0.7
 - Now works for other XML structures
