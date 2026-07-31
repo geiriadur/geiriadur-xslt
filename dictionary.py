@@ -1,3 +1,4 @@
+
 import lxml.etree as ET
 from urllib.parse import parse_qs
 import os
@@ -104,18 +105,33 @@ if len(results) == 1:
             root = html.getroot()
             target = word_form
 
-            for entry in root.findall('entry'):
-                if target not in entry.findtext('./meta/headword-ref', ''):
-                    root.remove(entry)
+            #for entry in root.findall('entry'):
+            #    if target not in entry.findtext('./meta/headword-ref', ''):
+            #        root.remove(entry)
+
+            for tag in entry_tags:
+                #for entry in root.findall(tag): # If tag is in root
+                for entry in root.xpath(f'.//{tag}'): # If tag is nested
+                    headwords = [h.text.strip() for tag in word_form_tags for h in entry.xpath(f'.//{tag}') if h.text]
+
+                    #if target not in headwords:
+                    #    root.remove(entry)
+
+                    if target not in headwords:
+                        parent = entry.getparent()
+                        if parent is not None:
+                            parent.remove(entry)
 
             xslt = ET.parse(xslt_setting)
             transform = ET.XSLT(xslt)
+            #print(ET.tostring(root, encoding="unicode")) ## FOR TESTING XSLT
             res = transform(html)
             res = ET.tostring(res, pretty_print=True, encoding="unicode")
             res = "<!DOCTYPE HTML>\n" + res
             res = res.replace("<body>", "<body>\n    " + input_form(query_string, query_lang, page_lang, regex_on))
             res = res.replace("<html>", "<html lang=\"" + page_lang + "\">")
-            res = res.replace('<table border="1"/>', "<p>" + no_data + "</p>")
+            #res = res.replace('<table border="1"/>', "<p>" + no_data + "</p>")
+            res = res.replace('<table border="1"/>', "<p>" + globals()[page_lang]['no_data'] + "</p>") # in the correct language
             res = res.replace("<body>", "<head>\n  " + head() + "\n  </head>\n  <body>")
 
             # This line superscripts digits
@@ -130,7 +146,8 @@ if len(results) == 1:
 
         except (ET.XMLSyntaxError, ET.XSLTApplyError) as e:
             #print(f"Error processing XML/XSLT: {e}")
-            print(xslt_error + ": " + e)
+            #print(xslt_error + ": " + e)
+            print(globals()[page_lang]['xslt_error'] + ": " + e) # in the correct language
 
 elif len(results) > 15:
     res = get_res(entry, query_string, query_lang, page_lang, regex_on, xslt_alt_on)

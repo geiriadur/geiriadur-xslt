@@ -40,8 +40,13 @@ for filename in os.listdir(dir):
             for elem in root.xpath(f"//{tag}"):
                 # New code to allow searching the words in the translation
                 entry = elem.text.strip()
+                if tag in full_text_tags:
+                    entry = ''.join(elem.itertext()).strip()
+                else:
+                    entry = elem.text.strip()
                 lang = elem.get("lang", "")
-                print(entry, lang)
+                lang = elem.get("lang", elem.get("{http://www.w3.org/XML/1998/namespace}lang", ""))
+                print(entry, lang) # Screen output at command line
                 # With Python's split you can only use one delimiter at a time
                 # Old method split all fields, not just translation
                 #words = re.split(r"[:;,.\(\)\-\s]", entry)
@@ -61,13 +66,22 @@ for filename in os.listdir(dir):
                     words = [block_word for block_word in words if block_word not in stopwords]
                 for word in words:
                     word = word.strip()
+                    if word and not any(c.isalnum() for c in word): continue # Stops search-forms that are only punctuation
                     if word:
                         # Avoid duplicate entries
                         if not index_root.xpath(f'word[search-form="{word}" and file-ref="{os.path.splitext(filename)[0]}"]'):
                         #if not index_root.xpath(f'word[search-form="{word}"]'):
 
-                            entry = elem.xpath('./ancestor::entry[1]')[0]
-                            headwords = [h.text.strip() for h in entry.findall('./head/headword-form')]
+                            #entry = elem.xpath('./ancestor::entry[1]')[0]
+                            ##entry = elem.xpath('./ancestor::*[1]')[0] # Attempt 1
+                            ##entry = elem.xpath('./ancestor::' + '|./ancestor::'.join(entry_tags) + '[1]')[0] # Attempt 2
+                            ##print(elem.tag, elem.getroottree().getpath(elem)) # FOR TESTING
+                            entries = elem.xpath('./ancestor::' + '|./ancestor::'.join(entry_tags) + '[1]')
+                            if not entries:
+                                continue
+                            entry = entries[0]
+                            #headwords = [h.text.strip() for h in entry.findall('./head/headword-form')]
+                            headwords = [h.text.strip() for tag in word_form_tags for h in entry.xpath(f'.//{tag}') if h.text]
                             #headword = entry.findtext('./head/headword-form', '')
                             for headword in headwords:
                                 w = ET.SubElement(index_root, "word")
@@ -75,10 +89,11 @@ for filename in os.listdir(dir):
                                 ET.SubElement(w, "word-form").text = headword
                                 ET.SubElement(w, "search-form").text = word
 
-                                if tag == "translation":
-                                    ET.SubElement(w, "slang").text = lang # or search_lang
-                                else:
-                                    ET.SubElement(w, "slang").text = data_lang
+                                #if tag == "translation":
+                                #    ET.SubElement(w, "slang").text = lang # or search_lang
+                                #else:
+                                #    ET.SubElement(w, "slang").text = data_lang
+                                ET.SubElement(w, "slang").text = lang or data_lang
 
                                 ET.SubElement(w, "file-ref").text = os.path.splitext(filename)[0]
 

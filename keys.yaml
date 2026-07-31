@@ -14,6 +14,10 @@ interface_langs: ['cy' ,'en' ,'la', 'da']
 data_lang: cy
 current_lang_label: True
 tags: ['headword-form', 'plural-form', 'fem-form', 'translation']
+word_form_tags: ['headword-form']
+entry_tags: ['entry']
+full_text_tags: []
+
 
 cy:
   # Constants

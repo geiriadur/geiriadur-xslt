@@ -188,16 +188,24 @@ def check_index(entry, query_lang):
     index_tree = ET.parse(word_index)
     index_root = index_tree.getroot()
     # REMOVE XPATH INJECTION
-    matches = index_root.xpath(
-        'word[search-form=$term]',
-        term=entry
-    )
+    #matches = index_root.xpath(
+    #    'word[search-form=$term]',
+    #    term=entry
+    #)
+    matches = [
+        w for w in index_root.xpath('word')
+        if w.findtext("search-form", "").lower() == entry
+    ]
     if not matches:
         # REMOVE XPATH INJECTION
-        matches = index_root.xpath(
-            'word[contains(search-form, $term)]',
-            term=entry
-        )
+        #matches = index_root.xpath(
+        #    'word[contains(search-form, $term)]',
+        #    term=entry
+        #)
+        matches = [
+            w for w in index_root.xpath('word')
+            if entry in w.findtext("search-form", "").lower()
+        ]
 
     results = []
 
@@ -209,7 +217,8 @@ def check_index(entry, query_lang):
     return results
 
 def check_index_regex(entry, query_lang):
-    pattern = re.compile(entry)
+    #pattern = re.compile(entry)
+    pattern = re.compile(entry, re.IGNORECASE)
     results = []
 
     index_tree = ET.parse(word_index)
