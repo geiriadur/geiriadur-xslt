@@ -154,9 +154,14 @@ def get_keys(keys, fetch_lang):
     value = dictionary.get(fetch_lang, dictionary["en"])
 
     for key, value in value.items():
-      globals()[key] = value # Could potentially overwrite any global
+      #globals()[key] = value # Could potentially overwrite any global
       # Safer because it prevents overwriting values already is use
       #if not key in globals(): globals()[key] = value
+      # Only replace the globals if they exist, otherwise leave them
+      if key in globals() and isinstance(globals()[key], dict) and isinstance(value, dict):
+          globals()[key].update(value)
+      else:
+          globals()[key] = value
 
 def check_index(entry, query_lang):
     # Check the index
