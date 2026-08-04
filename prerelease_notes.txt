@@ -10,3 +10,9 @@ Versions 0.1 - 0.6.1
 
 Version 0.7
 - Now works for other XML structures
+
+Version 0.7.0.x
+
+- No overwriting of globals if keys missing in keys.yaml
+- Replaced hardcoded no data message
+- Replaced hardcoded superscript digit function
