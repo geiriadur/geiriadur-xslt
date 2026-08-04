@@ -15,6 +15,8 @@ search_langs = ["cy" ,"en"]
 interface_langs = ["cy" ,"en"]
 data_lang = "cy" # Language of dictionary entries
 current_lang_label = True # Show current language in interface labels
+superscript_digit = True # Shows superscript digits
+superscript_tag = '<td lang="cy">' # Tag in which superscript digits are shown
 
 tags = ["headword-form", "plural-form", "fem-form", "translation"] # Fields to index: sudo python3 indexer.py
 word_form_tags = ['headword-form'] # Headword tag(s)

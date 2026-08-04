@@ -131,11 +131,13 @@ if len(results) == 1:
             res = res.replace("<body>", "<body>\n    " + input_form(query_string, query_lang, page_lang, regex_on))
             res = res.replace("<html>", "<html lang=\"" + page_lang + "\">")
             #res = res.replace('<table border="1"/>', "<p>" + no_data + "</p>")
-            res = res.replace('<table border="1"/>', "<p>" + globals()[page_lang]['no_data'] + "</p>") # in the correct language
+            #res = res.replace('<table border="1"/>', "<p>" + globals()[page_lang]['no_data'] + "</p>") # in the correct language
+            res = res.replace('<div id="message"/>\n  </body>', "<p>" + globals()[page_lang]['no_data'] + "</p>\n  </body>") # in the correct language
             res = res.replace("<body>", "<head>\n  " + head() + "\n  </head>\n  <body>")
 
             # This line superscripts digits
-            res = re.sub(r'(<td>[^<]*?)(\d)', r'\1<sup>\2</sup>', res)
+            #res = re.sub(r'(<td>[^<]*?)(\d)', r'\1<sup>\2</sup>', res)
+            if superscript_digit: res = re.sub(r'('+superscript_tag+'[^<]*?)(\d)', r'\1<sup>\2</sup>', res)
 
             res = transform_regex_labels(res, query_lang, regex_on, xslt_alt_on)
 

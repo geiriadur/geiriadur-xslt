@@ -13,6 +13,9 @@ search_langs: ['cy' ,'en' ,'la']
 interface_langs: ['cy' ,'en' ,'la', 'da']
 data_lang: cy
 current_lang_label: True
+superscript_digit: True # Shows superscript digits
+superscript_tag: '<td lang="cy">' # Tag in which superscript digits are shown
+
 tags: ['headword-form', 'plural-form', 'fem-form', 'translation']
 word_form_tags: ['headword-form']
 entry_tags: ['entry']

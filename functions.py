@@ -77,7 +77,8 @@ def input_form(query_string, query_lang, page_lang, regex_on):
         <p>{regex_line}<br/>
         {xslt_line}</p>
       </form>
-    </p>'''
+    </p>
+    <div id="message"/>'''
     lang_section = "\n"
     for l in search_langs:
         if 'lang'+str(search_langs.index(l)+1) in globals() and 'lang'+str(search_langs.index(l)+1)+"_name" in globals():
